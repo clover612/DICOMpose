@@ -1,0 +1,7 @@
+Welcome to DICOMpose
+
+Please follow these steps to process and summarize your DICOMs 
+
+Drag and drop the DICOMpose folder into Terminal (a program that can be found by typing Terminal into Searchlight)  
+1. Download Chris Rorden's dcm2niix_mac.zip script from https://github.com/rordenlab/dcm2niix/releases and unzip the file.
+2.  

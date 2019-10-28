@@ -13,12 +13,13 @@ do
     fi
     foo=$(cut -d'.' -f1 <<<$img)
     img2=$(echo ${foo##*/})
+    PROTNAME=$(cut -d'_' -f1 <<<$img2)
     ~/Documents/Provenzano/DICOM_CD_scripts/slices_5panel $img -L --o $outputdir/summary_pngs/$img2.png 
     htmlloc=$outputdir/summary_html/$img2.html
     cp ~/Documents/Provenzano/DICOM_CD_scripts/template.html $htmlloc;
     sed -i -e "s+IMGNAME+$img2+g" "$htmlloc";
     sed -i -e "s+IMGLOC+$img+g" "$htmlloc";
-    #sed -i -e "s+PROTNAM+$img+g" "$htmlloc";
+    sed -i -e "s+PROTNAM+$PROTNAME+g" "$htmlloc";
     sed -i -e "s+PNGSOURCE+$outputdir\/summary_pngs\/$img2.png+g" "$htmlloc";
     sizex=`fslval $img pixdim1`; sed -i -e "s+v1+$sizex+g" "$htmlloc";
     sizey=`fslval $img pixdim2`; sed -i -e "s+v2+$sizey+g" "$htmlloc";
