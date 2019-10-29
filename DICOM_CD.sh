@@ -113,7 +113,8 @@ while getopts ":df:" opt; do
       		pwd
       		for file in *
       		do
-      			mv $file ${d}_${file}
+            foo=$(cut -d'.' -f1 <<<${file})
+      			mv ${file} ${foo}_${d}.nii
       		done
       		find . -type d -delete
       	done

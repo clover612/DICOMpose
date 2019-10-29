@@ -1,10 +1,11 @@
 #!/bin/bash 
+
 set -e
-htmlloc=/Volumes/Srinidhi_Bh/Provenzano/trial/CD2/summary.html; 
+htmlloc=$1/summary.html; 
 touch $htmlloc; rm $htmlloc
 cat ~/Documents/Provenzano/DICOMpose/template_top.html >> $htmlloc;
-niifilepaths=$(find /Volumes/Srinidhi_Bh/Provenzano/trial/CD2/PAT00000 -name "*.nii*"|sort)
-outputdir=/Volumes/Srinidhi_Bh/Provenzano/trial/CD2
+niifilepaths=$(find $1 -name "*.nii*"|sort)
+outputdir=$1
 oldPROTNAME=0
 
 while read -r img 

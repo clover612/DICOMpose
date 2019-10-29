@@ -1,8 +1,8 @@
 #!/bin/bash
 
-outputdir=/Volumes/Srinidhi_Bh/Provenzano/trial/CD3/
+outputdir=$1
 mkdir $outputdir/summary_pngs
-niifilepaths=$(find /Volumes/Srinidhi_Bh/Provenzano/trial/CD3/ -name "*.nii*")
+niifilepaths=$(find $1 -name "*.nii*")
 
 
 while read -r img 
