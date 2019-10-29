@@ -2,7 +2,7 @@
 
 ## Please follow these steps to process and summarize your DICOMs 
  
-1. Download Chris Rorden's dcm2niix_mac.zip script from https://github.com/rordenlab/dcm2niix/releases and unzip the file. Note the dcm2niix file. 
+1. Download Chris Rorden's dcm2niix_mac.zip script from https://github.com/rordenlab/dcm2niix/releases and unzip the file. Note the location of the dcm2niix file. 
 2. Drag and drop the DICOMpose folder into Terminal (a program that can be found by typing Terminal into Searchlight) 
 3. In Terminal, type ./DICOMpose.sh and enter.
 4. When prompted with "Please enter the path to the dcm2niix executable", please drag the dcm2niix downloaded earlier.
