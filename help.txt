@@ -1,8 +1,0 @@
-<div class=sidenav>
-<a href="#MPRRAGE">MPRRAGE</a> 
-<a href="#MPRRAGE">MPRRAGE</a> 
-<a href="#MPRRAGE">MPRRAGE</a> 
-<a href="#MPRRAGE">MPRRAGE</a> 
-<a href="#PROTNAME">PROTNAME</a> 
-<a href="#PROTNAME">PROTNAME</a> 
-</div>
