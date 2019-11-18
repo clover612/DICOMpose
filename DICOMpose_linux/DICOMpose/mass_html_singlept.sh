@@ -18,26 +18,12 @@ do
     PROTNAME=$(cut -d'_' -f1 <<<$img2)
     if [ "$PROTNAME" != "$oldPROTNAME" ]; then
         if [ "$oldPROTNAME" != "0" ]; then
-            #sed -i '' 's/emma//g' $htmlloc
             sed -i '0,/emma/s/emma//' "$htmlloc"
-	fi
- 
-        # sed -i '' '/div>checksrin/i \ ###FOR MAC
-        # potato \
-        # ' "$htmlloc";
-
+		fi
         sed -i '0,/div>checksrin/s/<\/div>checksrin/potato\n&/' "$htmlloc" ###FOR UBUNTU
-
-        # sed -i '' '/potato/{ ###FOR MAC
-        # s/potato//g
-        # r ~/DICOMpose/subnav_temp.html
-        # }' $htmlloc
-
-	sed -i "s/potato/$(sed -e 's/[\&/]/\\&/g' -e 's/$/\\n/' "$2/DICOMpose/subnav_temp.html" | tr -d '\n')/" "$htmlloc" ###FOR UBUNTU
-
+		sed -i "s/potato/$(sed -e 's/[\&/]/\\&/g' -e 's/$/\\n/' "$2/DICOMpose/subnav_temp.html" | tr -d '\n')/" "$htmlloc" ###FOR UBUNTU
         echo "<h1 style=\"color:green;\">$PROTNAME</h1>">>$htmlloc
-
-	sed -i -e "s^PROTNAME^$PROTNAME^g" "$htmlloc";
+		sed -i -e "s^PROTNAME^$PROTNAME^g" "$htmlloc";
     fi
 
     cat $2/DICOMpose/template_wt.html >> $htmlloc;
@@ -54,9 +40,6 @@ do
     fovx=`echo "$sizex * $nx" | bc -l`; sed -i -e "s^fovx^$fovx^g" "$htmlloc" ;
     fovy=`echo "$sizey * $ny" | bc -l`; sed -i -e "s^fovy^$fovy^g" "$htmlloc" ;
     fovz=`echo "$sizez * $nz" | bc -l`; sed -i -e "s^fovz^$fovz^g" "$htmlloc" ;
-    #sed -i '' '/div>emma/i \ 
-    #<a href="#img2">img2</a> \
-    #' "$htmlloc"; 
     sed -i '0,/div>emma/s/<\/div>emma/<a href="#img2">img2<\/a>\n&/' "$htmlloc" ###FOR UBUNTU	
     sed -i -e "s^img2^$img2^g" "$htmlloc";
     oldPROTNAME=$PROTNAME
@@ -67,6 +50,5 @@ echo "</div>" >> $htmlloc
 cat $2/DICOMpose/scripts.html >> $htmlloc;
 echo "</body>" >> $htmlloc
 echo "</html>" >> $htmlloc
-#sed -i '' 's/checksrin//g' "$htmlloc"
- sed -i '0,/emma/s/emma//' "$htmlloc"
-#sed -i '' 's/emma//g' "$htmlloc"
+sed -i '0,/checksrin/s/checksrin//' "$htmlloc"
+sed -i '0,/emma/s/emma//' "$htmlloc"
