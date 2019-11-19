@@ -12,5 +12,5 @@ do
     fi
     foo=$(cut -d'.' -f1 <<<$img)
     img2=$(echo ${foo##*/})
-    ~/DICOMpose/slices_5panel $img -L --o $outputdir/summary_pngs/$img2.png 
+    ~/DICOMpose/DICOMpose_linux/DICOMpose/slices_5panel $img -L --o $outputdir/summary_pngs/$img2.png 
 done <<< "$niifilepaths"

@@ -3,7 +3,7 @@
 set -e
 htmlloc=$1/summary.html; 
 touch $htmlloc; rm $htmlloc
-cat $2/DICOMpose/template_top.html >> $htmlloc;
+cat $2/DICOMpose/DICOMpose_linux/DICOMpose/template_top.html >> $htmlloc;
 niifilepaths=$(find $1 -name "*.nii*"|sort)
 outputdir=$1
 oldPROTNAME=0
@@ -21,12 +21,12 @@ do
             sed -i '0,/emma/s/emma//' "$htmlloc"
 		fi
         sed -i '0,/div>checksrin/s/<\/div>checksrin/potato\n&/' "$htmlloc" ###FOR UBUNTU
-		sed -i "s/potato/$(sed -e 's/[\&/]/\\&/g' -e 's/$/\\n/' "$2/DICOMpose/subnav_temp.html" | tr -d '\n')/" "$htmlloc" ###FOR UBUNTU
+		sed -i "s/potato/$(sed -e 's/[\&/]/\\&/g' -e 's/$/\\n/' "$2/DICOMpose/DICOMpose_linux/DICOMpose/subnav_temp.html" | tr -d '\n')/" "$htmlloc" ###FOR UBUNTU
         echo "<h1 style=\"color:green;\">$PROTNAME</h1>">>$htmlloc
 		sed -i -e "s^PROTNAME^$PROTNAME^g" "$htmlloc";
     fi
 
-    cat $2/DICOMpose/template_wt.html >> $htmlloc;
+    cat $2/DICOMpose/DICOMpose_linux/DICOMpose/template_wt.html >> $htmlloc;
     sed -i -e "s^IMGNAME^$img2^g" "$htmlloc"; IMGLIST+=("$img2"); 
     sed -i -e "s^IMGLOC^$img^g" "$htmlloc";
     sed -i -e "s^PROTNAM^$PROTNAME^g" "$htmlloc";
@@ -47,7 +47,7 @@ do
 done <<< "$niifilepaths"
 
 echo "</div>" >> $htmlloc
-cat $2/DICOMpose/scripts.html >> $htmlloc;
+cat $2/DICOMpose/DICOMpose_linux/DICOMpose/scripts.html >> $htmlloc;
 echo "</body>" >> $htmlloc
 echo "</html>" >> $htmlloc
 sed -i '0,/checksrin/s/checksrin//' "$htmlloc"

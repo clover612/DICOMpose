@@ -6,15 +6,17 @@ read dcm2niix
 echo "Please enter output folder"
 read outputfol
 
-#/Users/srinidhibharadwaj/Documents/Provenzano/DICOMpose/DICOM_CD.sh $dcm2niix $outputfol
+~/DICOMpose/DICOMpose_linux/DICOMpose/DICOM_CD.sh $dcm2niix $outputfol
 
 patients=$(find $outputfol -maxdepth 1 -mindepth 1 -type d)
 while read -r sline
 do
-	if grep -q OrganizedDICOMs <<<$sline; then
-    	continue
+    if grep -q OrganizedDICOMs <<<$sline; then
+   	continue
     fi
-    echo $sline
-	~/DICOMpose/summary_pngs_only.sh $sline
-	~/DICOMpose/mass_html_singlept.sh $sline
+    echo "SUMMARY FILES BEING CREATED FOR PATIENT:" $sline
+	/home/pliny/DICOMpose/DICOMpose_linux/DICOMpose/summary_pngs_only.sh $sline
+	echo "SUMMARY PNGS CREATED"
+	/home/pliny/DICOMpose/DICOMpose_linux/DICOMpose/mass_html_singlept.sh $sline /home/pliny/
+	echo "SUMMARY HTML CREATED" 
 done <<< "$patients"
