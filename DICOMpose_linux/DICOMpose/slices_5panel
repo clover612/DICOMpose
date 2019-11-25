@@ -1,5 +1,15 @@
 #!/bin/sh
 
+###############
+# Modified November 2019
+# editor:@sb3784 / clover612
+# slices_5panel modifies slices, a FSL script, to display five (as opposed to three)
+# different slices axially, coronally, and sagitally as a .png (as opposed to a gif)
+###############
+
+
+
+
 #   slices - call slicer with default cuts and display
 #
 #   Stephen Smith,Mark Jenkinson and Matthew Webster, FMRIB Image Analysis Group

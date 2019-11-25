@@ -1,20 +1,34 @@
 #!/bin/bash 
 
+##############
+# Created in November 2019
+# author:@sb3784 / clover612
+# mass_html_singlept.sh creates a summary html file with information
+# and summary images for each nifti in the destination
+# INPUT : $1 = patient destination folder, $2 = home folder
+##############
+
+
 set -e
 htmlloc=$1/summary.html; 
 touch $htmlloc; rm $htmlloc
+#formatting for html file
 cat $2/DICOMpose/DICOMpose_linux/DICOMpose/template_top.html >> $htmlloc;
+#collecting all patient niftis
 niifilepaths=$(find $1 -name "*.nii*"|sort)
 outputdir=$1
 oldPROTNAME=0
 
+# loop through images
 while read -r img 
 do
+    # no summary info for time of flight images
     if grep -q TOF <<<$img || grep -q MRV <<<$img; then
         continue
     fi
     foo=$(cut -d'.' -f1 <<<$img)
     img2=$(echo ${foo##*/})
+    # organize dropdowns by protocol name 
     PROTNAME=$(cut -d'_' -f1 <<<$img2)
     if [ "$PROTNAME" != "$oldPROTNAME" ]; then
         if [ "$oldPROTNAME" != "0" ]; then
@@ -25,7 +39,8 @@ do
         echo "<h1 style=\"color:green;\">$PROTNAME</h1>">>$htmlloc
 		sed -i -e "s^PROTNAME^$PROTNAME^g" "$htmlloc";
     fi
-
+    
+    # HTML BODY REPLACEMENT FOR EACH IMAGE 
     cat $2/DICOMpose/DICOMpose_linux/DICOMpose/template_wt.html >> $htmlloc;
     sed -i -e "s^IMGNAME^$img2^g" "$htmlloc"; IMGLIST+=("$img2"); 
     sed -i -e "s^IMGLOC^$img^g" "$htmlloc";
@@ -47,6 +62,7 @@ do
 done <<< "$niifilepaths"
 
 echo "</div>" >> $htmlloc
+# some extra formatting 
 cat $2/DICOMpose/DICOMpose_linux/DICOMpose/scripts.html >> $htmlloc;
 echo "</body>" >> $htmlloc
 echo "</html>" >> $htmlloc

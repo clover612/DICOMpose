@@ -1,17 +1,21 @@
 
 #!/bin/bash
 
-#CHECK WHERE DCM2NIIX IS INSTALLED
+######
+
+# Created in October 2019
+# @author: sb3784 / clover612
+#
+# DICOM_CD.sh finds the location of the DICOM_CD, organizes DICOMS in the destination folder, 
+# and converts DICOMS to nii in the destination folder
+# INPUTS: $1 = dcm2niix location, $2 = destination folder 
+#####
+
+
 dcm2niix=$1; outputfol=$2;
 
-# MAC MOUNTING
-# diskname=$(df -h | grep Volumes | grep 100% | rev | cut -d '/' -f1 | rev)
-# if [ -z "$diskname" ]
-# 	then
-# 	echo "NO CD MOUNTED, exiting..."
-# 	exit
-# fi
 
+## FIND MOUNTED CD LOCATION
 
 diskname=$(find /media/pliny/ -maxdepth 1 -mindepth 1 -type d)
 echo $diskname "MOUNTED"
@@ -19,6 +23,7 @@ echo $diskname "MOUNTED"
 cd $diskname
 #echo "CD FOLDER:" $ParentDir
 
+## FIND FILE PATH OF ALL DICOMS TO BE CONVERTED
 imgfilepaths=$(dcmdump DICOMDIR | grep "ReferencedFileID" | sed 's/.*\[\([^]]*\)\].*/\1/g' | sed 's/\\/\//g')
 
 echo "Organizing DICOMs based on SubjectID, Scan Date & Modality"
@@ -26,19 +31,10 @@ echo "====================================="
 echo "====================================="
 echo "====================================="
 
-# Assign SubjID to be initial directory name ##
-
-# for i in $(find . ! -path . -type d -maxdepth 1)
-# do
-# 	SubjID=`echo "${i}"| sed 's|^./||'`
-# 	echo "Organizing DICOMs for $SubjID"
-# 	echo "============================="
-
-## loop through files in each subject dir
+## LOOP THROUGH DICOMS AND ORGANIZE 
 while read -r sline
 do 
     j=$diskname/$sline
-    #echo $j
     if grep -q .DS_Store <<<$j || grep -q OrganizedDICOMs <<<$j; then
     	continue
     fi
@@ -58,7 +54,7 @@ do
     ## cd to parent directory to start the loop over again
     cd ${ParentDir}      
 done <<< "$imgfilepaths"
-# done
+
 
 echo "DICOMS have been organized"
 echo "====================================="
@@ -73,6 +69,7 @@ echo "====================================="
 
 cd $outputfol/OrganizedDICOMs
 
+## CONVERTING DICOMS TO NII WITH dcm2niix
 all_fols=$(find . ! -path . -type d -mindepth 3)
 while IFS= read -r line 
 do 
@@ -107,14 +104,15 @@ while getopts ":df:" opt; do
       	echo "MOVING FILE STRUCTURE..."
       	for d in `ls $outputfol`
       	do
-      		find $d -name '*.nii' -exec mv '{}' $d \; 
+		find $d -name '*.nii' -exec mv '{}' $d \;  #find all nii in output folder 
       		pwd
       		cd $d
       		pwd
+		#move to parent director
       		for file in *
       		do
-            foo=$(cut -d'.' -f1 <<<${file})
-      			mv ${file} ${foo}_${d}.nii
+	            foo=$(cut -d'.' -f1 <<<${file})
+       		    mv ${file} ${foo}_${d}.nii
       		done
       		find . -type d -delete
       	done
