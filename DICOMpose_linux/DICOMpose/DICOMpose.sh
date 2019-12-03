@@ -1,12 +1,31 @@
 #!/bin/bash
 
-echo "Please enter the path to the dcm2niix executable"
-read dcm2niix 
+set -e
 
-echo "Please enter output folder"
-read outputfol
+FSLDIR=/usr/local/fsl
+. ${FSLDIR}/etc/fslconf/fsl.sh
+PATH=${FSLDIR}/bin:${PATH}
+export FSLDIR PATH
 
-~/DICOMpose/DICOMpose_linux/DICOMpose/DICOM_CD.sh $dcm2niix $outputfol
+
+dcpdir=$(pwd)
+blkid /dev/sr0
+CD_in=$(echo $?)
+if [ "$CD_in" != "0" ]
+then
+    exit
+fi
+cd ../Downloads/
+dcm2niix=$(pwd)/dcm2niix
+echo "The dcm2niix directory is $dcm2niix"
+cd ../Desktop/
+mkdir temp_$(date "+%F-%T")
+cd temp_$(date "+%F-%T")
+outputfol=$(pwd)
+echo "The destination folder is $outputfol"
+
+cd $dcpdir 
+$dcpdir/DICOM_CD.sh $dcm2niix $outputfol
 
 patients=$(find $outputfol -maxdepth 1 -mindepth 1 -type d)
 while read -r sline
@@ -15,8 +34,8 @@ do
    	continue
     fi
     echo "SUMMARY FILES BEING CREATED FOR PATIENT:" $sline
-	/home/pliny/DICOMpose/DICOMpose_linux/DICOMpose/summary_pngs_only.sh $sline
+	$dcpdir/summary_pngs_only.sh $sline $dcpdir
 	echo "SUMMARY PNGS CREATED"
-	/home/pliny/DICOMpose/DICOMpose_linux/DICOMpose/mass_html_singlept.sh $sline /home/pliny/
+	$dcpdir/mass_html_singlept.sh $sline $dcpdir
 	echo "SUMMARY HTML CREATED" 
 done <<< "$patients"

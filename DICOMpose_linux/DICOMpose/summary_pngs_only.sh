@@ -10,6 +10,7 @@
 #!/bin/bash
 
 outputdir=$1
+dcpdir=$2
 mkdir $outputdir/summary_pngs
 niifilepaths=$(find $1 -name "*.nii*") #find all niftis in destination folder 
 
@@ -21,5 +22,5 @@ do
     fi
     foo=$(cut -d'.' -f1 <<<$img) 
     img2=$(echo ${foo##*/}) #summary image name
-    ~/DICOMpose/DICOMpose_linux/DICOMpose/slices_5panel $img -L --o $outputdir/summary_pngs/$img2.png #-L prints slice number information on images
+    $dcpdir/slices_5panel $img -L --o $outputdir/summary_pngs/$img2.png #-L prints slice number information on images
 done <<< "$niifilepaths"

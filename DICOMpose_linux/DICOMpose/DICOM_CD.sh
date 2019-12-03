@@ -17,7 +17,7 @@ dcm2niix=$1; outputfol=$2;
 
 ## FIND MOUNTED CD LOCATION
 
-diskname=$(find /media/pliny/ -maxdepth 1 -mindepth 1 -type d)
+diskname=$(find /media/ -maxdepth 2 -mindepth 2 -type d)
 echo $diskname "MOUNTED"
 #ParentDir=/
 cd $diskname
