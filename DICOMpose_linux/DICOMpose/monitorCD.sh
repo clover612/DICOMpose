@@ -7,15 +7,16 @@
 # monitorCD.sh is always deployed and checks when the system has a disc inserted
 ########### 
 
-TARGET=/dev/cdrom
+TARGET=/dev/sr0
 
 inotifywait -m --format "%f" $TARGET \
 	  | echo "Hello!" 
-	  sleep 10s #wait for computer to recognize CD
+	  sleep 20s #wait for computer to recognize CD
 	  echo "Done sleeping"
 	  dcpdir=$(pwd)
-	  cd_there=$(isoinfo -d -i /dev/cdrom)
-	  if echo $cd_there | grep -Eq 'Volume id'
+	  blkid /dev/sr0
+	  cd_there=$(echo $?)
+	  if [ $cd_there -le 1 ] 
 	  then	
 	        echo "Disk recognized, starting DICOM organization and conversion..."
        	        $dcpdir/DICOMpose.sh

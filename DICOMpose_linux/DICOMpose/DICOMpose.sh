@@ -25,7 +25,7 @@ outputfol=$(pwd)
 echo "The destination folder is $outputfol"
 
 cd $dcpdir 
-$dcpdir/DICOM_CD.sh $dcm2niix $outputfol
+time $dcpdir/DICOM_CD.sh $dcm2niix $outputfol --takeyourtime
 
 patients=$(find $outputfol -maxdepth 1 -mindepth 1 -type d)
 while read -r sline
