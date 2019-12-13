@@ -2,7 +2,7 @@
 
 ## SELECT VERSION OF DICOMPOSE TO USE WITH YOUR OPERATING SYSTEM (MAC OR LINUX)
 
-For example, if you own a Mac, please download the DICOMpose_mac.zip folder. 
+For example, if you're machine's operating system is Linux, please download the DICOMpose_linux.tar.gz file. 
  
 READMEs contained within each DICOMpose folder give specific instructions 
 
