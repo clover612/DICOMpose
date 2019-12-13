@@ -9,9 +9,10 @@
  
 1. Download Chris Rorden's dcm2niix_mac.zip script from https://github.com/rordenlab/dcm2niix/releases and unzip the file. Please ensure that the dcm2niix file enclosed is
 contained in your Downloads folder (~/Downloads) 
-2. Drag and drop the DICOMpose folder into Terminal (a program already installed on your Linux machine) 
-3. In Terminal, type ./monitor_CD.sh and enter.
-4. The default destination for the output folder should be your Desktop
+2. Open the program Terminal (a program already installed on your Linux machine) and type cd
+3. Drag and drop the DICOMpose folder into Terminal and enter 
+4. In Terminal, type ./monitor_CD.sh and enter
+5. The default destination for the output folder should be your Desktop (~/Desktop)
 
 ## OPTIONS/FLAGS to specify an action other than default 
 
