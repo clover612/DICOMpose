@@ -6,6 +6,7 @@
 # mass_html_singlept.sh creates a summary html file with information
 # and summary images for each nifti in the destination
 # INPUT : $1 = patient destination folder, $2 = home folder
+# OUTPUT : 
 ##############
 
 
@@ -28,6 +29,7 @@ do
     fi
     foo=$(cut -d'.' -f1 <<<$img)
     img2=$(echo ${foo##*/})
+
     # organize dropdowns by protocol name 
     PROTNAME=$(cut -d'_' -f1 <<<$img2)
     if [ "$PROTNAME" != "$oldPROTNAME" ]; then
@@ -58,6 +60,13 @@ do
     sed -i '0,/div>emma/s/<\/div>emma/<a href="#img2">img2<\/a>\n&/' "$htmlloc" ###FOR UBUNTU	
     sed -i -e "s^img2^$img2^g" "$htmlloc";
     oldPROTNAME=$PROTNAME
+
+    ## prepare for database
+    path="${img:1}"; tail="${path#/*/}"; date=$(echo $tail | cut -d/ -f1); 
+    tail2="${path#/}"; ptid=$(echo $tail2 | cut -d/ -f1);
+    CDIdfoo=$(cat $outputdir/diskname.txt);
+    CDId=$(echo ${CDIdfoo##*/}); 
+    python $2/insert_values.py $ptid $date $CDId $PROTNAME $$img2 $img "$outputdir/summary_pngs/$img2.png" $sizex $sizey $sizez $nx $ny $nz $fovx $fovy $fovz sb3784 date sb3784 date 
 
 done <<< "$niifilepaths"
 

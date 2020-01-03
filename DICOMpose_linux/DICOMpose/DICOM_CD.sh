@@ -19,6 +19,7 @@ dcm2niix=$1; outputfol=$2;
 
 diskname=$(find /media/ -maxdepth 2 -mindepth 2 -type d)
 echo $diskname "MOUNTED"
+echo $diskname > $2/diskname.txt
 #ParentDir=/
 cd $diskname
 #echo "CD FOLDER:" $ParentDir
