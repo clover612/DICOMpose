@@ -19,7 +19,7 @@ inotifywait -m --format "%f" $TARGET \
 	  if [ $cd_there -le 1 ] 
 	  then	
 	        echo "Disk recognized, starting DICOM organization and conversion..."
-       	        $dcpdir/DICOMpose.sh
+       	        $dcpdir/DICOMpose_CD.sh
 	  	eject
 	  	sleep 20s
 	  else 

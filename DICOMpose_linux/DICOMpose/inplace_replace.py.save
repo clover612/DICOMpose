@@ -1,0 +1,19 @@
+import sys, glob, os
+
+
+f1 = open('yourBigFile.txt', 'r')
+f2 = open('yourBigFile.txt.tmp', 'w')
+for line in f1:
+    f2.write(line.replace(';', ' '))
+f1.close()
+f2.close()
+
+def main():
+    filename=sys.argv[1]
+    print(filename)
+    old_string=sys.argv[2]
+    new_string=sys.argv[3]
+    inplace_change(filename, old_string, new_string)
+
+if __name__=='__main__':
+    main()

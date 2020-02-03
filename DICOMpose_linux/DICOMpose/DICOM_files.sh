@@ -11,21 +11,18 @@
 # INPUTS: $1 = dcm2niix location, $2 = destination folder 
 #####
 
-
 dcm2niix=$1; outputfol=$2;
 
 
-## FIND MOUNTED CD LOCATION
-
-diskname=$(find /media/ -maxdepth 2 -mindepth 2 -type d)
-echo $diskname "MOUNTED"
-echo $diskname > $outputfol/diskname.txt
-cd $diskname
-#echo "CD FOLDER:" $ParentDir
+## USER INPUTS FOLDER WITH DICOMS
+echo "Please enter the parent directory of dicoms. For faster processing, please remove files that are not dicoms from this directory."
+read dicmdir
+dicmdir="${dicmdir%\'}"; dicomdir="${dicmdir#\'}"
+echo "NULL_$dicomdir" > $outputfol/diskname.txt
 
 ## FIND FILE PATH OF ALL DICOMS TO BE CONVERTED
-imgfilepaths=$(dcmdump DICOMDIR | grep "ReferencedFileID" | sed 's/.*\[\([^]]*\)\].*/\1/g' | sed 's/\\/\//g')
-
+#imgfilepaths=$(dcmdump $dicomdir --scan-directories | grep "ReferencedFileID" | sed 's/.*\[\([^]]*\)\].*/\1/g' | sed 's/\\/\//g')
+imgfilepaths=$(find $dicomdir -type f)  
 echo "Organizing DICOMs based on SubjectID, Scan Date & Modality"
 echo "====================================="
 echo "====================================="
@@ -34,8 +31,8 @@ echo "====================================="
 ## LOOP THROUGH DICOMS AND ORGANIZE 
 while read -r sline
 do 
-    j=$diskname/$sline
-    if grep -q .DS_Store <<<$j || grep -q OrganizedDICOMs <<<$j; then
+    j=$sline
+    if grep -q .DS_Store <<<$j || grep -q OrganizedDICOMs <<<$j ; then
     	continue
     fi
 
@@ -49,7 +46,7 @@ do
     fi
 
     ## copy DICOM to corresponding Subj/Scandate/Modality dir
-    cp $j $outputfol/OrganizedDICOMs/$SubjID/$ScanDate/$Modality;
+    mv $j $outputfol/OrganizedDICOMs/$SubjID/$ScanDate/$Modality;
 
     ## cd to parent directory to start the loop over again
     cd ${ParentDir}      

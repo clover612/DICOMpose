@@ -5,8 +5,9 @@
 # author:@sb3784 / clover612
 # mass_html_singlept.sh creates a summary html file with information
 # and summary images for each nifti in the destination
-# INPUT : $1 = patient destination folder, $2 = home folder
-# OUTPUT : 
+# INPUTS: $1 = patient destination folder 
+#	  $2 = home (DICOMpose folder location) folder
+#	  $3 = binary check to see whether CD has been uploaded to database
 ##############
 
 
@@ -29,25 +30,40 @@ do
     fi
     foo=$(cut -d'.' -f1 <<<$img)
     img2=$(echo ${foo##*/})
-
     # organize dropdowns by protocol name 
     PROTNAME=$(cut -d'_' -f1 <<<$img2)
     if [ "$PROTNAME" != "$oldPROTNAME" ]; then
         if [ "$oldPROTNAME" != "0" ]; then
             sed -i '0,/emma/s/emma//' "$htmlloc"
+        else 
+            ptid=$(awk -F/ '{print $(NF-3)}' <<< "$img");
+            sed -i -e "s^PATIENTID^$ptid^g" "$htmlloc";
 		fi
         sed -i '0,/div>checksrin/s/<\/div>checksrin/potato\n&/' "$htmlloc" ###FOR UBUNTU
-		sed -i "s/potato/$(sed -e 's/[\&/]/\\&/g' -e 's/$/\\n/' "$2/subnav_temp.html" | tr -d '\n')/" "$htmlloc" ###FOR UBUNTU
+        sed -i "s/potato/$(sed -e 's/[\&/]/\\&/g' -e 's/$/\\n/' "$2/subnav_temp.html" | tr -d '\n')/" "$htmlloc" ###FOR UBUNTU
         echo "<h1 style=\"color:green;\">$PROTNAME</h1>">>$htmlloc
 		sed -i -e "s^PROTNAME^$PROTNAME^g" "$htmlloc";
     fi
-    
+
     # HTML BODY REPLACEMENT FOR EACH IMAGE 
     cat $2/template_wt.html >> $htmlloc;
     sed -i -e "s^IMGNAME^$img2^g" "$htmlloc"; IMGLIST+=("$img2"); 
     sed -i -e "s^IMGLOC^$img^g" "$htmlloc";
     sed -i -e "s^PROTNAM^$PROTNAME^g" "$htmlloc";
+    acqdate=$(awk -F/ '{print $(NF-2)}' <<< "$img");
+    sed -i -e "s^DATEACQ^$acqdate^g" "$htmlloc";
     sed -i -e "s^PNGSOURCE^$outputdir\/summary_pngs\/$img2.png^g" "$htmlloc";
+    #basecode=$(echo "yo");
+    #basecode=`base64 $outputdir/summary_jpgs/${img2}.jpg`;
+    #sed -i -e "s^BASECODE^$basecode^g" "$htmlloc";
+    #base64 $outputdir/summary_jpgs/${img2}.jpg > base65.txt
+    #tr '\r' '\n' < base65.txt > base64.txt
+    #sed -i "s/BASECODE/$(sed -e 's/[\&/]/\\&/g' -e 's/$/\\n/' "base65.txt" | tr -d '\n')/" "$htmlloc"
+    #sed -i "s^BASECODE^$(cat base65.txt)^g" $htmlloc > htmlloc.tmp
+    #mv htmlloc.tmp $htmlloc
+    #printf '%s\n' '/BASECODE/r base64.txt' 1 '/BASECODE/d' w | ed "$htmlloc";
+    #python $2/inplace_replace.py "$htmlloc" "$htmlloc.tmp" BASECODE "$outputdir/summary_jpgs/${img2}.jpg"
+    #mv "$htmlloc.tmp" "$htmlloc"
     sizex=`fslval $img pixdim1`; sed -i -e "s^v1^$sizex^g" "$htmlloc";
     sizey=`fslval $img pixdim2`; sed -i -e "s^v2^$sizey^g" "$htmlloc";
     sizez=`fslval $img pixdim3`; sed -i -e "s^v3^$sizez^g" "$htmlloc";
@@ -60,15 +76,22 @@ do
     sed -i '0,/div>emma/s/<\/div>emma/<a href="#img2">img2<\/a>\n&/' "$htmlloc" ###FOR UBUNTU	
     sed -i -e "s^img2^$img2^g" "$htmlloc";
     oldPROTNAME=$PROTNAME
-
+    
     ## prepare for database
-    path="${img:1}"; tail="${path#/*/}"; date=$(echo $tail | cut -d/ -f1); 
-    tail2="${path#/}"; ptid=$(echo $tail2 | cut -d/ -f1);
-    CDIdfoo=$(cat $outputdir/diskname.txt);
+
+    CD_check=$3; 
+    if [ "$CD_check" == "1" ]; then
+    echo "hey"
+    ptid=$(awk -F/ '{print $(NF-3)}' <<< "$img");
+    cd $outputdir; cd ..; parentdir=$(pwd);
+    CDIdfoo=$(cat $parentdir/diskname.txt);
     CDId=$(echo ${CDIdfoo##*/}); 
-    python $2/insert_values.py $ptid $date $CDId $PROTNAME $$img2 $img "$outputdir/summary_pngs/$img2.png" $sizex $sizey $sizez $nx $ny $nz $fovx $fovy $fovz sb3784 date sb3784 date 
+    python $2/insert_values.py ~/Desktop/dicompose.db $ptid $acqdate $CDId $PROTNAME $img2 $img "$outputdir/summary_pngs/$img2.png" $sizex $sizey $sizez $nx $ny $nz $fovx $fovy $fovz sb3784 $(date) sb3784 $(date)
+    fi
 
 done <<< "$niifilepaths"
+
+
 
 echo "</div>" >> $htmlloc
 # some extra formatting 

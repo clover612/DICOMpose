@@ -19,9 +19,7 @@ dcm2niix=$1; outputfol=$2;
 
 diskname=$(find /media/ -maxdepth 2 -mindepth 2 -type d)
 echo $diskname "MOUNTED"
-echo $diskname > $outputfol/diskname.txt
 cd $diskname
-#echo "CD FOLDER:" $ParentDir
 
 ## FIND FILE PATH OF ALL DICOMS TO BE CONVERTED
 imgfilepaths=$(dcmdump DICOMDIR | grep "ReferencedFileID" | sed 's/.*\[\([^]]*\)\].*/\1/g' | sed 's/\\/\//g')
@@ -31,10 +29,23 @@ echo "====================================="
 echo "====================================="
 echo "====================================="
 
+## COPY DICOMS LOCALLY
+mkdir $outputfol/all_dicoms
+
+h=1;
+while read -r sline 
+do 
+    j=$diskname/$sline 
+    cp $j $outputfol/all_dicoms/dcm_$h 
+    ((h=h+1))
+done <<< "$imgfilepaths"
+
+localimgpaths=$(ls $outputfol/all_dicoms)
+
 ## LOOP THROUGH DICOMS AND ORGANIZE 
 while read -r sline
 do 
-    j=$diskname/$sline
+    j=$outputfol/all_dicoms/$sline
     if grep -q .DS_Store <<<$j || grep -q OrganizedDICOMs <<<$j; then
     	continue
     fi
@@ -50,10 +61,10 @@ do
 
     ## copy DICOM to corresponding Subj/Scandate/Modality dir
     cp $j $outputfol/OrganizedDICOMs/$SubjID/$ScanDate/$Modality;
+   
+done <<< "$localimgpaths"
 
-    ## cd to parent directory to start the loop over again
-    cd ${ParentDir}      
-done <<< "$imgfilepaths"
+rm -rf $outputfol/all_dicoms
 
 
 echo "DICOMS have been organized"
