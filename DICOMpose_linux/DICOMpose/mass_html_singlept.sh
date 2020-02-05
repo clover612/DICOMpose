@@ -11,14 +11,17 @@
 ##############
 
 
-set -e
+
 htmlloc=$1/summary.html; 
 touch $htmlloc; rm $htmlloc
 #formatting for html file
 cat $2/template_top.html >> $htmlloc;
 #collecting all patient niftis
-niifilepaths=$(find $1 -name "*.nii*"|sort)
-outputdir=$1
+#niifilepaths=$(find $1 -name "*.nii*"|sort)
+outputdir=$1; outputdir=${outputdir%/};
+cd $outputdir
+niifilepaths=$(find . -name "*.nii*"|sort -t/ -k3,3 -k2,2| sed "s?.?$outputdir?")
+cd $2
 oldPROTNAME=0
 
 # loop through images
@@ -36,9 +39,8 @@ do
         if [ "$oldPROTNAME" != "0" ]; then
             sed -i '0,/emma/s/emma//' "$htmlloc"
         else 
-            ptid=$(awk -F/ '{print $(NF-3)}' <<< "$img");
-            sed -i -e "s^PATIENTID^$ptid^g" "$htmlloc";
-		fi
+            ptid=$(awk -F/ '{print $(NF-3)}' <<< "$img"); sed -i -e "s^PATIENTID^$ptid^g" "$htmlloc";
+	fi
         sed -i '0,/div>checksrin/s/<\/div>checksrin/potato\n&/' "$htmlloc" ###FOR UBUNTU
         sed -i "s/potato/$(sed -e 's/[\&/]/\\&/g' -e 's/$/\\n/' "$2/subnav_temp.html" | tr -d '\n')/" "$htmlloc" ###FOR UBUNTU
         echo "<h1 style=\"color:green;\">$PROTNAME</h1>">>$htmlloc
@@ -52,7 +54,9 @@ do
     sed -i -e "s^PROTNAM^$PROTNAME^g" "$htmlloc";
     acqdate=$(awk -F/ '{print $(NF-2)}' <<< "$img");
     sed -i -e "s^DATEACQ^$acqdate^g" "$htmlloc";
-    sed -i -e "s^PNGSOURCE^$outputdir\/summary_pngs\/$img2.png^g" "$htmlloc";
+    if test -f "$outputdir/summary_pngs/$img2.png"; then
+	     sed -i -e "s^PNGSOURCE^$outputdir\/summary_pngs\/$img2.png^g" "$htmlloc";
+    fi
     #basecode=$(echo "yo");
     #basecode=`base64 $outputdir/summary_jpgs/${img2}.jpg`;
     #sed -i -e "s^BASECODE^$basecode^g" "$htmlloc";
