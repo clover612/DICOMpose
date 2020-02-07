@@ -21,7 +21,6 @@ cat $2/template_top.html >> $htmlloc;
 outputdir=$1; outputdir=${outputdir%/};
 cd $outputdir
 niifilepaths=$(find . -name "*.nii*"|sort -t/ -k3,3 -k2,2| sed "s?.?$outputdir?")
-cd $2
 oldPROTNAME=0
 
 # loop through images
@@ -55,7 +54,7 @@ do
     acqdate=$(awk -F/ '{print $(NF-2)}' <<< "$img");
     sed -i -e "s^DATEACQ^$acqdate^g" "$htmlloc";
     if test -f "$outputdir/summary_pngs/$img2.png"; then
-	     sed -i -e "s^PNGSOURCE^$outputdir\/summary_pngs\/$img2.png^g" "$htmlloc";
+	     sed -i -e "s^PNGSOURCE^summary_pngs\/$img2.png^g" "$htmlloc";
     fi
     #basecode=$(echo "yo");
     #basecode=`base64 $outputdir/summary_jpgs/${img2}.jpg`;
@@ -85,7 +84,6 @@ do
 
     CD_check=$3; 
     if [ "$CD_check" == "1" ]; then
-    echo "hey"
     ptid=$(awk -F/ '{print $(NF-3)}' <<< "$img");
     cd $outputdir; cd ..; parentdir=$(pwd);
     CDIdfoo=$(cat $parentdir/diskname.txt);

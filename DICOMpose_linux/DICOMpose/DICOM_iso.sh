@@ -19,6 +19,10 @@ echo "====================================="
 echo "====================================="
 echo "====================================="
 
+count=0
+total=$(dcmdump DICOMDIR | grep "ReferencedFileID" | sed 's/.*\[\([^]]*\)\].*/\1/g' | sed 's/\\/\//g' | wc -l)
+start=`date +%s`
+
 ## LOOP THROUGH DICOMS AND ORGANIZE 
 while read -r sline
 do 
@@ -31,17 +35,23 @@ do
     ScanDate=$(dcmdump $j | grep "StudyDate" | grep -Eo '[0-9]{8}');
     Modality=$(dcmdump $j | grep "SeriesDescription" | grep -o '\[.*]'| sed 's/[^a-zA-Z0-9]*//g');
 
-    ## Make new dirs for scan date & scan type
+    # Make new dirs for scan date & scan type
     if [ ! -d "$outputfol/OrganizedDICOMs/$SubjID/$ScanDate/$Modality" ]; then
     	mkdir -p $outputfol/OrganizedDICOMs/$SubjID/$ScanDate/$Modality;
-		echo "$Modality FOLDER CREATED"    
+		#echo "$Modality FOLDER CREATED"    
     fi
 
     ## copy DICOM to corresponding Subj/Scandate/Modality dir
     cp $j $outputfol/OrganizedDICOMs/$SubjID/$ScanDate/$Modality;
 
     ## cd to parent directory to start the loop over again
-    cd ${ParentDir}      
+    cd ${ParentDir}   
+    cur=`date +%s`
+    count=$(( $count + 1 ))
+    pd=$(( $count * 73 / $total ))
+    runtime=$(( $cur-$start ))
+    estremain=$(( ($runtime * $total / $count)-$runtime ))
+    printf "\r%d.%d%% complete ($count of $total) - est %d:%0.2d remaining\e[K" $(( $count*100/$total )) $(( ($count*1000/$total)%10)) $(( $estremain/60 )) $(( $estremain%60 ))   
 done <<< "$imgfilepaths"
 
 
