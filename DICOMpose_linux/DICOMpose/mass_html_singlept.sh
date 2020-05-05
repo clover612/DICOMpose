@@ -56,17 +56,6 @@ do
     if test -f "$outputdir/summary_pngs/$img2.png"; then
 	     sed -i -e "s^PNGSOURCE^summary_pngs\/$img2.png^g" "$htmlloc";
     fi
-    #basecode=$(echo "yo");
-    #basecode=`base64 $outputdir/summary_jpgs/${img2}.jpg`;
-    #sed -i -e "s^BASECODE^$basecode^g" "$htmlloc";
-    #base64 $outputdir/summary_jpgs/${img2}.jpg > base65.txt
-    #tr '\r' '\n' < base65.txt > base64.txt
-    #sed -i "s/BASECODE/$(sed -e 's/[\&/]/\\&/g' -e 's/$/\\n/' "base65.txt" | tr -d '\n')/" "$htmlloc"
-    #sed -i "s^BASECODE^$(cat base65.txt)^g" $htmlloc > htmlloc.tmp
-    #mv htmlloc.tmp $htmlloc
-    #printf '%s\n' '/BASECODE/r base64.txt' 1 '/BASECODE/d' w | ed "$htmlloc";
-    #python $2/inplace_replace.py "$htmlloc" "$htmlloc.tmp" BASECODE "$outputdir/summary_jpgs/${img2}.jpg"
-    #mv "$htmlloc.tmp" "$htmlloc"
     sizex=`fslval $img pixdim1`; sed -i -e "s^v1^$sizex^g" "$htmlloc";
     sizey=`fslval $img pixdim2`; sed -i -e "s^v2^$sizey^g" "$htmlloc";
     sizez=`fslval $img pixdim3`; sed -i -e "s^v3^$sizez^g" "$htmlloc";

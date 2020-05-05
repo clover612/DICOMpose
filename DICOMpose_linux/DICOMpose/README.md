@@ -11,7 +11,7 @@
 contained in your Downloads folder (~/Downloads) 
 2. Open the program Terminal (a program already installed on your Linux machine) and type cd
 3. Drag and drop the DICOMpose folder into Terminal and enter 
-4. In Terminal, type ./monitor_CD.sh and enter
+4. In Terminal, type ./main.sh and enter
 5. The default destination for the output folder should be your Desktop (~/Desktop)
 
 ## OPTIONS/FLAGS to specify an action other than default 
