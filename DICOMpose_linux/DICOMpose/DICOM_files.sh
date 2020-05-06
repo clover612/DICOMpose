@@ -22,7 +22,8 @@ echo "NULL_$dicomdir" > $outputfol/diskname.txt
 
 ## FIND FILE PATH OF ALL DICOMS TO BE CONVERTED
 #imgfilepaths=$(dcmdump $dicomdir --scan-directories | grep "ReferencedFileID" | sed 's/.*\[\([^]]*\)\].*/\1/g' | sed 's/\\/\//g')
-imgfilepaths=$(find $dicomdir -type f)  
+#imgfilepaths=$(find $dicomdir -type f)  
+imgfilepaths=$(file --separator : $(find $dicomdir -type f) | grep DICOM | cut -d':' -f1)
 echo "Organizing DICOMs based on SubjectID, Scan Date & Modality"
 echo "====================================="
 echo "====================================="

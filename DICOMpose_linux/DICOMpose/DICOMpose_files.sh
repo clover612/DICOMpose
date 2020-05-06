@@ -20,14 +20,14 @@ outputfol=/home/dicompose/Desktop/mstemp_files
 echo "The destination folder is $outputfol"
 
 #cd $dcpdir 
-#$dcpdir/DICOM_files.sh $dcm2niix $outputfol 
+$dcpdir/DICOM_files.sh $dcm2niix $outputfol 
 
 LOGFILE=$outputfol/errors.log
 (
 #### SQL DATABASE CREATION
 ## CREATE dicompose.db file if it does not exist with existing table structure
 python $dcpdir/create_table.py $dsktpdir/dicompose.db
-## CHECK if this CD has already been entered into db
+## CHECK if this file path has already been entered into db
 CDIdfoo=$(cat $outputfol/diskname.txt);
 CDId=$(echo ${CDIdfoo##*/}); 
 CD_check=$(python $dcpdir/sqlNewCD.py $dsktpdir/dicompose.db CDId)
