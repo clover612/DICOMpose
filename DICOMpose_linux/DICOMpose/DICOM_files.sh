@@ -21,19 +21,21 @@ dicmdir="${dicmdir%\'}"; dicomdir="${dicmdir#\'}"
 echo "NULL_$dicomdir" > $outputfol/diskname.txt
 
 ## FIND FILE PATH OF ALL DICOMS TO BE CONVERTED
-#imgfilepaths=$(dcmdump $dicomdir --scan-directories | grep "ReferencedFileID" | sed 's/.*\[\([^]]*\)\].*/\1/g' | sed 's/\\/\//g')
-#imgfilepaths=$(find $dicomdir -type f)  
 imgfilepaths=$(file --separator : $(find $dicomdir -type f) | grep DICOM | cut -d':' -f1)
 echo "Organizing DICOMs based on SubjectID, Scan Date & Modality"
 echo "====================================="
 echo "====================================="
 echo "====================================="
 
+count=0
+total=$(file --separator : $(find $dicomdir -type f) | grep DICOM | cut -d':' -f1 | wc -l)
+start=`date +%s`
+
 ## LOOP THROUGH DICOMS AND ORGANIZE 
 while read -r sline
 do 
     j=$sline
-    if grep -q .DS_Store <<<$j || grep -q OrganizedDICOMs <<<$j ; then
+    if grep -q .DS_Store <<<$j || grep -q OrganizedDICOMs <<<$j || grep -q DICOMDIR <<<$j; then
     	continue
     fi
 
@@ -47,10 +49,17 @@ do
     fi
 
     ## copy DICOM to corresponding Subj/Scandate/Modality dir
-    mv $j $outputfol/OrganizedDICOMs/$SubjID/$ScanDate/$Modality;
+    cp $j $outputfol/OrganizedDICOMs/$SubjID/$ScanDate/$Modality;
 
     ## cd to parent directory to start the loop over again
-    cd ${ParentDir}      
+    cd ${ParentDir} 
+    cur=`date +%s`
+    count=$(( $count + 1 ))
+    pd=$(( $count * 73 / $total ))
+    runtime=$(( $cur-$start ))
+    estremain=$(( ($runtime * $total / $count)-$runtime ))
+    printf "\r%d.%d%% complete ($count of $total) - est %d:%0.2d remaining\e[K" $(( $count*100/$total )) $(( ($count*1000/$total)%10)) $(( $estremain/60 )) $(( $estremain%60 ))   
+     
 done <<< "$imgfilepaths"
 
 
@@ -106,7 +115,7 @@ while getopts ":df:" opt; do
       		pwd
       		cd $d
       		pwd
-		#move to parent director
+		#move to parent directory
       		for file in *
       		do
 	            foo=$(cut -d'.' -f1 <<<${file})

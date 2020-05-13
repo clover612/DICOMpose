@@ -24,6 +24,4 @@ do
     foo=$(cut -d'.' -f1 <<<$img) 
     img2=$(echo ${foo##*/}) #summary image name
     $dcpdir/slices_5panel $img -L --o $outputdir/summary_pngs/$img2.png #-L prints slice number information on images
-    convert $outputdir/summary_pngs/$img2.png $outputdir/summary_jpgs/$img2.jpeg
-    convert -strip -interlace Plane -gaussian-blur 0.05 -quality 1% $outputdir/summary_jpgs/$img2.jpeg $outputdir/summary_jpgs/$img2.jpeg
 done <<< "$niifilepaths"

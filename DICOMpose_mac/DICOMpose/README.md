@@ -1,4 +1,6 @@
-# WELCOME TO DICOMpose
+# WELCOME TO DICOMpose for Mac
+
+## CURRENTLY DICOMPOSE FOR MAC IS NOT FULLY FUNCTIONAL
 
 ## Please follow these steps to process and summarize your DICOMs 
  

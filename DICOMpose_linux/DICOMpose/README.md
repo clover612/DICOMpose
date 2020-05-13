@@ -1,4 +1,4 @@
-# WELCOME TO DICOMpose
+# WELCOME TO DICOMpose for Linux
 
 ## Please make sure you have downloaded all of these programs before you run DICOMpose
 1. FSL (instructions for download here: https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation/Linux )

@@ -16,10 +16,8 @@ dsktpdir=$(pwd)
 mkdir temp_$(date "+%F-%T")
 cd temp_$(date "+%F-%T")
 outputfol=$(pwd)
-outputfol=/home/dicompose/Desktop/mstemp_files
 echo "The destination folder is $outputfol"
 
-#cd $dcpdir 
 $dcpdir/DICOM_files.sh $dcm2niix $outputfol 
 
 LOGFILE=$outputfol/errors.log
@@ -49,4 +47,4 @@ do
 done <<< "$patients"
 ) >& $LOGFILE
 
-echo "Your folder has been DICOMposed."
+echo "Your folder has been DICOMposed. Check errors.log within output directory for errors."
