@@ -1,3 +1,13 @@
+"""
+Created Winter 2020
+@author: sb3784/clover612
+
+insert_values.py inserts entry in table in dicompose database file 
+that contains a CD/file location image information
+"""
+
+
+
 import sqlite3
 from sqlite3 import Error
 import sys

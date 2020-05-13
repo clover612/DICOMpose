@@ -1,3 +1,11 @@
+"""
+Created Winter 2020
+@author: sb3784/clover612
+
+sqlNewCD.py checks if CD/file location has or hasn't been entered
+into dicompose database file
+"""
+
 import sqlite3
 from sqlite3 import Error
 import sys

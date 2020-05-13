@@ -1,3 +1,12 @@
+"""
+Created Winter 2020
+@author: sb3784 / clover612
+
+create_connection.py creates a database connection to dicompose database file
+"""
+
+
+
 import sqlite3
 from sqlite3 import Error
 import sys

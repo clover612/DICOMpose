@@ -1,5 +1,11 @@
 #!/bin/bash 
 
+############
+# Created Spring 2020
+# author:@sb3784
+# 
+# mount_iso.sh mounts a disk drive as a local iso
+########### 
 
 echo "MOUNTING ISO"
 isopath=/mnt/iso;

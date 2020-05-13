@@ -2,7 +2,6 @@
 #!/bin/bash
 
 ######
-
 # Created in October 2019
 # @author: sb3784 / clover612
 #

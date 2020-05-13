@@ -1,3 +1,12 @@
+"""
+Created Winter 2020
+@author: sb3784/clover612
+
+create_table.py creates table in dicompose database file 
+that will contain each CD/file location image information
+"""
+
+
 import sqlite3
 from sqlite3 import Error
 import sys
